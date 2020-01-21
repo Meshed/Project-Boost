@@ -8,12 +8,6 @@ public class Rocket : MonoBehaviour
     Rigidbody _rigidBody;
     AudioSource _audioSource;
 
-    enum RocketRotation
-    {
-        Left,
-        Right
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -24,12 +18,13 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ProcessInput();
+        Thrust();
+        Rotate();
     }
 
-    private void ProcessInput()
+    private void Thrust()
     {
-        if(Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
             _rigidBody.AddRelativeForce(Vector3.up);
 
@@ -39,35 +34,37 @@ public class Rocket : MonoBehaviour
         {
             _audioSource.Stop();
         }
-
-        if(Input.GetKey(KeyCode.A))
-        {
-            RotateRocket(RocketRotation.Left);
-        }
-        else if(Input.GetKey(KeyCode.D))
-        {
-            RotateRocket(RocketRotation.Right);
-        }
     }
-
-    private void RotateRocket(RocketRotation rocketRotation)
-    {
-        switch(rocketRotation)
-        {
-            case RocketRotation.Left:
-                transform.Rotate(Vector3.forward);
-                break;
-            case RocketRotation.Right:
-                transform.Rotate(-Vector3.forward);
-                break;
-        }
-    }
-
     private void PlayRocketThrustSound()
     {
         if (!_audioSource.isPlaying)
         {
             _audioSource.Play();
         }
+    }
+
+    private void Rotate()
+    {
+        _rigidBody.freezeRotation = true;
+
+        if(Input.GetKey(KeyCode.A))
+        {
+            RotateLeft();
+        }
+        else if(Input.GetKey(KeyCode.D))
+        {
+            RotateRight();
+        }
+
+        _rigidBody.freezeRotation = false;
+    }
+    private void RotateLeft()
+    {
+        transform.Rotate(Vector3.forward);
+    }
+    private void RotateRight()
+    {
+
+        transform.Rotate(-Vector3.forward);
     }
 }
