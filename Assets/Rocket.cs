@@ -9,33 +9,60 @@ public class Rocket : MonoBehaviour
     [SerializeField]float _rcsThrust = 200f;
     [SerializeField]float _mainThrust = 100f;
 
+    enum State
+    {
+        Alive,
+        Dying,
+        Transending
+    }
+    State state;
+
     // Start is called before the first frame update
     void Start()
     {
         _rigidBody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
+
+        state = State.Alive;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Thrust();
-        Rotate();
+        if(state == State.Alive)
+        {
+            Thrust();
+            Rotate();
+        }
     }
 
     private void OnCollisionEnter(Collision collision) 
     {
+        if(state != State.Alive) { return; }
+
         switch(collision.gameObject.tag)
         {
             case "Friendly":
                 break;
             case "Finish":
-                SceneManager.LoadScene(1);
+                state = State.Transending;
+                Invoke("LoadNextScene", 1f);
                 break;
             default:
-                SceneManager.LoadScene(0);
+                state = State.Dying;
+                StopRocketThrustSound();
+                Invoke("LoadFirstScene", 1f);
                 break;
         }
+    }
+
+    private void LoadNextScene()
+    {
+        SceneManager.LoadScene(1);
+    }
+    private void LoadFirstScene()
+    {
+        SceneManager.LoadScene(0);
     }
 
     private void Thrust()
@@ -48,7 +75,7 @@ public class Rocket : MonoBehaviour
         }
         else
         {
-            _audioSource.Stop();
+            StopRocketThrustSound();
         }
     }
     private void PlayRocketThrustSound()
@@ -56,6 +83,13 @@ public class Rocket : MonoBehaviour
         if (!_audioSource.isPlaying)
         {
             _audioSource.Play();
+        }
+    }
+    private void StopRocketThrustSound()
+    {
+        if(_audioSource.isPlaying)
+        {
+            _audioSource.Stop();
         }
     }
 
