@@ -8,9 +8,14 @@ public class Rocket : MonoBehaviour
 
     [SerializeField] float _rcsThrust = 200f;
     [SerializeField] float _mainThrust = 100f;
+
     [SerializeField] AudioClip _mainEngine;
     [SerializeField] AudioClip _rocketExplosion;
     [SerializeField] AudioClip _levelCompleteChime;
+
+    [SerializeField] ParticleSystem _mainEngineParticles;
+    [SerializeField] ParticleSystem _rocketExplosionParticles;
+    [SerializeField] ParticleSystem _levelCompleteChimeParticles;
 
     enum State
     {
@@ -50,11 +55,14 @@ public class Rocket : MonoBehaviour
             case "Finish":
                 state = State.Transending;
                 PlayLevelCompleteChime();
+                PlayLevelCompleteParticles();
                 Invoke("LoadNextScene", 1f);
                 break;
             default:
                 state = State.Dying;
                 PlayRocketExplosion();
+                PlayRocketExplosionParticles();
+                StopRocketThrustParticles();
                 Invoke("LoadFirstScene", 1f);
                 break;
         }
@@ -75,12 +83,20 @@ public class Rocket : MonoBehaviour
             _audioSource.PlayOneShot(_levelCompleteChime);
         }
     }
+    private void PlayLevelCompleteParticles()
+    {
+        _levelCompleteChimeParticles.Play();
+    }
     private void PlayRocketExplosion()
     {
         if(_rocketExplosion != null)
         {
             _audioSource.PlayOneShot(_rocketExplosion);
         }
+    }
+    private void PlayRocketExplosionParticles()
+    {
+        _rocketExplosionParticles.Play();
     }
 
     private void RespondToThrustInput()
@@ -89,10 +105,12 @@ public class Rocket : MonoBehaviour
         {
             ApplyThrust();
             PlayRocketThrustSound();
+            PlayRocketThrustParticles();
         }
         else
         {
             StopRocketThrustSound();
+            StopRocketThrustParticles();
         }
     }
     private void ApplyThrust()
@@ -112,6 +130,18 @@ public class Rocket : MonoBehaviour
         {
             _audioSource.Stop();
         }
+    }
+
+    private void PlayRocketThrustParticles()
+    {
+        if(_mainEngineParticles.isPlaying == false)
+        {
+            _mainEngineParticles.Play();
+        }
+    }
+    private void StopRocketThrustParticles()
+    {
+        _mainEngineParticles.Stop();
     }
 
     private void Rotate()
