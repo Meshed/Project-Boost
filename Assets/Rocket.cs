@@ -115,7 +115,7 @@ public class Rocket : MonoBehaviour
     }
     private void ApplyThrust()
     {
-        _rigidBody.AddRelativeForce(Vector3.up * _mainThrust);
+        _rigidBody.AddRelativeForce(Vector3.up * _mainThrust * Time.deltaTime);
     }
     private void PlayRocketThrustSound()
     {
