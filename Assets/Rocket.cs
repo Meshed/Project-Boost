@@ -6,8 +6,11 @@ public class Rocket : MonoBehaviour
     Rigidbody _rigidBody;
     AudioSource _audioSource;
 
-    [SerializeField]float _rcsThrust = 200f;
-    [SerializeField]float _mainThrust = 100f;
+    [SerializeField] float _rcsThrust = 200f;
+    [SerializeField] float _mainThrust = 100f;
+    [SerializeField] AudioClip _mainEngine;
+    [SerializeField] AudioClip _rocketExplosion;
+    [SerializeField] AudioClip _levelCompleteChime;
 
     enum State
     {
@@ -31,7 +34,7 @@ public class Rocket : MonoBehaviour
     {
         if(state == State.Alive)
         {
-            Thrust();
+            RespondToThrustInput();
             Rotate();
         }
     }
@@ -46,11 +49,12 @@ public class Rocket : MonoBehaviour
                 break;
             case "Finish":
                 state = State.Transending;
+                PlayLevelCompleteChime();
                 Invoke("LoadNextScene", 1f);
                 break;
             default:
                 state = State.Dying;
-                StopRocketThrustSound();
+                PlayRocketExplosion();
                 Invoke("LoadFirstScene", 1f);
                 break;
         }
@@ -64,13 +68,26 @@ public class Rocket : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+    private void PlayLevelCompleteChime()
+    {
+        if(_levelCompleteChime != null)
+        {
+            _audioSource.PlayOneShot(_levelCompleteChime);
+        }
+    }
+    private void PlayRocketExplosion()
+    {
+        if(_rocketExplosion != null)
+        {
+            _audioSource.PlayOneShot(_rocketExplosion);
+        }
+    }
 
-    private void Thrust()
+    private void RespondToThrustInput()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            _rigidBody.AddRelativeForce(Vector3.up * _mainThrust);
-
+            ApplyThrust();
             PlayRocketThrustSound();
         }
         else
@@ -78,11 +95,15 @@ public class Rocket : MonoBehaviour
             StopRocketThrustSound();
         }
     }
+    private void ApplyThrust()
+    {
+        _rigidBody.AddRelativeForce(Vector3.up * _mainThrust);
+    }
     private void PlayRocketThrustSound()
     {
         if (!_audioSource.isPlaying)
         {
-            _audioSource.Play();
+            _audioSource.PlayOneShot(_mainEngine);
         }
     }
     private void StopRocketThrustSound()

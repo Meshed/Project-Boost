@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 236809451670082744}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.727, y: -1.28, z: -0}
-  m_LocalScale: {x: 0.45392, y: 1.5, z: 0.45392}
+  m_LocalScale: {x: 0.45392, y: 1.5, z: 0.6}
   m_Children: []
   m_Father: {fileID: 8232909627224301052}
   m_RootOrder: 1
@@ -210,7 +210,7 @@ Transform:
   m_GameObject: {fileID: 3850265523137346673}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.727, y: -1.28, z: -0}
-  m_LocalScale: {x: 0.45392, y: 1.5, z: 0.45392}
+  m_LocalScale: {x: 0.45392, y: 1.5, z: 0.6}
   m_Children: []
   m_Father: {fileID: 8232909627224301052}
   m_RootOrder: 2
@@ -318,7 +318,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8232909627224301053}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 1
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -339,7 +339,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rcsThrust: 250
-  _mainThrust: 30
+  _mainThrust: 20
+  _mainEngine: {fileID: 8300000, guid: 94adb57f54081a14289c0bca5e11f50d, type: 3}
+  _rocketExplosion: {fileID: 8300000, guid: 2a545b5f7eff52c4d922650bb32d0ee4, type: 3}
+  _levelCompleteChime: {fileID: 8300000, guid: e28f10f0ec37dfa41be9bd2e95d0593c, type: 3}
 --- !u!82 &1447488587
 AudioSource:
   m_ObjectHideFlags: 0
@@ -350,11 +353,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 94adb57f54081a14289c0bca5e11f50d, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
