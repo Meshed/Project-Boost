@@ -8,6 +8,7 @@ public class Rocket : MonoBehaviour
 
     [SerializeField] float _rcsThrust = 200f;
     [SerializeField] float _mainThrust = 100f;
+    [SerializeField] float _LevelLoadDelay = 1f;
 
     [SerializeField] AudioClip _mainEngine;
     [SerializeField] AudioClip _rocketExplosion;
@@ -56,14 +57,14 @@ public class Rocket : MonoBehaviour
                 state = State.Transending;
                 PlayLevelCompleteChime();
                 PlayLevelCompleteParticles();
-                Invoke("LoadNextScene", 1f);
+                Invoke("LoadNextScene", _LevelLoadDelay);
                 break;
             default:
                 state = State.Dying;
                 PlayRocketExplosion();
                 PlayRocketExplosionParticles();
                 StopRocketThrustParticles();
-                Invoke("LoadFirstScene", 1f);
+                Invoke("LoadFirstScene", _LevelLoadDelay);
                 break;
         }
     }
