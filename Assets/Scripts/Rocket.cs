@@ -177,8 +177,6 @@ public class Rocket : MonoBehaviour
     {
         float rotationThisFrame = _rcsThrust * Time.deltaTime;
 
-        _rigidBody.freezeRotation = true;
-
         if(Input.GetKey(KeyCode.A))
         {
             RotateLeft(rotationThisFrame);
@@ -187,15 +185,17 @@ public class Rocket : MonoBehaviour
         {
             RotateRight(rotationThisFrame);
         }
-
-        _rigidBody.freezeRotation = false;
     }
     private void RotateLeft(float rotationThisFrame)
     {
+        _rigidBody.freezeRotation = true;
         transform.Rotate(Vector3.forward * rotationThisFrame);
+        _rigidBody.freezeRotation = false;
     }
     private void RotateRight(float rotationThisFrame)
     {
+        _rigidBody.freezeRotation = true;
         transform.Rotate(-Vector3.forward * rotationThisFrame);
+        _rigidBody.freezeRotation = false;
     }
 }
