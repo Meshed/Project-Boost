@@ -120,7 +120,7 @@ public class Rocket : MonoBehaviour
     {
         if(_rocketExplosion != null)
         {
-            _audioSource.PlayOneShot(_rocketExplosion);
+            _audioSource.PlayOneShot(_rocketExplosion, 0.5f);
         }
     }
     private void PlayRocketExplosionParticles()

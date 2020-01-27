@@ -481,7 +481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d8f71a754e34fb4aa1a96b6bd1970aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rcsThrust: 300
+  _rcsThrust: 250
   _mainThrust: 2000
   _LevelLoadDelay: 1
   _mainEngine: {fileID: 8300000, guid: 94adb57f54081a14289c0bca5e11f50d, type: 3}
