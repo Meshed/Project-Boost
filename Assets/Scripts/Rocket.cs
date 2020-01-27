@@ -3,9 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
-    Rigidbody _rigidBody;
-    AudioSource _audioSource;
-
     [SerializeField] float _rcsThrust = 200f;
     [SerializeField] float _mainThrust = 100f;
     [SerializeField] float _LevelLoadDelay = 1f;
@@ -17,6 +14,11 @@ public class Rocket : MonoBehaviour
     [SerializeField] ParticleSystem _mainEngineParticles;
     [SerializeField] ParticleSystem _rocketExplosionParticles;
     [SerializeField] ParticleSystem _levelCompleteChimeParticles;
+
+    Rigidbody _rigidBody;
+    AudioSource _audioSource;
+    bool _isCollisionEnabled = true;
+    int _currentSceneIndex = 0;
 
     enum State
     {
@@ -33,6 +35,7 @@ public class Rocket : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
 
         state = State.Alive;
+        _currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     // Update is called once per frame
@@ -40,14 +43,32 @@ public class Rocket : MonoBehaviour
     {
         if(state == State.Alive)
         {
+            if(Debug.isDebugBuild)
+            {
+                HandleDebugKeys();
+            }
+
             RespondToThrustInput();
             Rotate();
         }
     }
 
+    private void HandleDebugKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextScene();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            _isCollisionEnabled = !_isCollisionEnabled;
+        }
+    }
+
     private void OnCollisionEnter(Collision collision) 
     {
-        if(state != State.Alive) { return; }
+        if(state != State.Alive || _isCollisionEnabled == false) { return; }
 
         switch(collision.gameObject.tag)
         {
@@ -64,18 +85,25 @@ public class Rocket : MonoBehaviour
                 PlayRocketExplosion();
                 PlayRocketExplosionParticles();
                 StopRocketThrustParticles();
-                Invoke("LoadFirstScene", _LevelLoadDelay);
+                Invoke("ReloadCurrentScene", _LevelLoadDelay);
                 break;
         }
     }
 
     private void LoadNextScene()
     {
-        SceneManager.LoadScene(1);
+        if(_currentSceneIndex == SceneManager.sceneCountInBuildSettings - 1)
+        {
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            SceneManager.LoadScene(_currentSceneIndex + 1);
+        }
     }
-    private void LoadFirstScene()
+    private void ReloadCurrentScene()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(_currentSceneIndex);
     }
     private void PlayLevelCompleteChime()
     {
